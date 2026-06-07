@@ -107,16 +107,26 @@ def format_memory_block(
 class MossMemory:
     """Adapts the Moss SDK to the MemoryPort the decision pipeline expects."""
 
-    def __init__(self, client, tropes_index: str, session):
+    def __init__(self, client, tropes_index: str, session_index: str):
         self._client = client
         self._tropes = tropes_index
-        self._session = session
+        self._session_index = session_index
+
+    @staticmethod
+    async def _resolve(result):
+        """Await if coroutine, return directly if sync."""
+        if hasattr(result, "__await__"):
+            return await result
+        return result
 
     async def gate_score(self, text: str) -> float:
         from moss import QueryOptions
         if not text.strip():
             return 0.0
-        res = await self._client.query(self._tropes, text, QueryOptions(top_k=1))
+        try:
+            res = await self._resolve(self._client.query(self._tropes, text, QueryOptions(top_k=1)))
+        except Exception:
+            return 0.0
         if not res.docs:
             return 0.0
         first = res.docs[0]
@@ -124,7 +134,10 @@ class MossMemory:
 
     async def callback(self, text: str, k: int = 2) -> list[Hit]:
         from moss import QueryOptions
-        res = await self._session.query(text, QueryOptions(top_k=k))
+        try:
+            res = await self._resolve(self._client.query(self._session_index, text, QueryOptions(top_k=k)))
+        except Exception:
+            return []
         return [
             Hit(text=d.text, score=float(getattr(d, "score", 0.0) or 0.0), id=str(getattr(d, "id", "")))
             for d in res.docs
@@ -132,10 +145,10 @@ class MossMemory:
 
     async def remember(self, doc_id: str, text: str) -> None:
         from moss import DocumentInfo
-        await self._session.add_docs([DocumentInfo(id=doc_id, text=text)])
+        try:
+            await self._resolve(self._client.add_docs(self._session_index, [DocumentInfo(id=doc_id, text=text)]))
+        except Exception:
+            pass
 
     async def push(self) -> None:
-        try:
-            await self._session.push_index()
-        except RuntimeError:
-            pass
+        pass

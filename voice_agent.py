@@ -45,8 +45,14 @@ async def entrypoint(ctx: JobContext):
 
     moss = MossClient(os.environ["MOSS_PROJECT_ID"], os.environ["MOSS_PROJECT_KEY"])
     await moss.load_index(INDEX)
-    moss_session = await moss.session(index_name=f"call-{ctx.room.name}")
-    memory = MossMemory(moss, INDEX, moss_session)
+    session_index = f"call-{ctx.room.name}"
+    from moss import DocumentInfo as MossDoc
+    try:
+        await moss.create_index(session_index, [MossDoc(id="seed", text="session start")])
+    except Exception:
+        pass
+    await moss.load_index(session_index)
+    memory = MossMemory(moss, INDEX, session_index)
 
     llm = MinimaxClient(MINIMAX_BASE_URL, MINIMAX_API_KEY)
     decision = DecisionPipeline(persona, memory, llm, echo, telemetry)

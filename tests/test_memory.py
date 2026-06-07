@@ -26,30 +26,20 @@ class _Result:
 
 
 class _FakeClient:
-    def __init__(self, score=0.9):
+    def __init__(self, score=0.9, session_score=0.6):
         self.score = score
+        self.session_score = session_score
         self.queries: list[tuple[str, str]] = []
+        self.added_docs: list[tuple[str, list]] = []
 
     async def query(self, index, text, opts):
         self.queries.append((index, text))
+        if index == "session":
+            return _Result([_Doc("turn-1", "earlier line", self.session_score)])
         return _Result([_Doc("d1", "match", self.score)])
 
-
-class _FakeSession:
-    def __init__(self):
-        self.docs = []
-        self.pushed = 0
-        self.queried: list[str] = []
-
-    async def add_docs(self, docs):
-        self.docs.extend(docs)
-
-    async def query(self, text, opts):
-        self.queried.append(text)
-        return _Result([_Doc("turn-1", "earlier line", 0.6)])
-
-    async def push_index(self):
-        self.pushed += 1
+    async def add_docs(self, index, docs):
+        self.added_docs.append((index, docs))
 
 
 @pytest.fixture(autouse=True)
@@ -75,39 +65,35 @@ def _stub_moss(monkeypatch):
 
 async def test_gate_score_returns_first_hit():
     client = _FakeClient(score=0.84)
-    mem = MossMemory(client, "tropes", _FakeSession())
+    mem = MossMemory(client, "tropes", "session")
     score = await mem.gate_score("Tulsa accountant")
     assert score == pytest.approx(0.84)
     assert client.queries == [("tropes", "Tulsa accountant")]
 
 
 async def test_gate_empty_text_returns_zero():
-    mem = MossMemory(_FakeClient(), "tropes", _FakeSession())
+    mem = MossMemory(_FakeClient(), "tropes", "session")
     assert await mem.gate_score("   ") == 0.0
 
 
 async def test_callback_returns_hits():
-    mem = MossMemory(_FakeClient(), "tropes", _FakeSession())
+    mem = MossMemory(_FakeClient(), "tropes", "session")
     hits = await mem.callback("earlier", k=1)
     assert len(hits) == 1
     assert hits[0].text == "earlier line"
 
 
-async def test_remember_pushes_doc():
-    sess = _FakeSession()
-    mem = MossMemory(_FakeClient(), "tropes", sess)
+async def test_remember_adds_doc_to_session_index():
+    client = _FakeClient()
+    mem = MossMemory(client, "tropes", "session")
     await mem.remember("turn-3", "what they said")
-    assert len(sess.docs) == 1
-    assert sess.docs[0].id == "turn-3"
+    assert len(client.added_docs) == 1
+    assert client.added_docs[0][0] == "session"
+    assert client.added_docs[0][1][0].id == "turn-3"
 
 
-async def test_push_swallows_runtime_error():
-    sess = _FakeSession()
-
-    async def boom():
-        raise RuntimeError("no session")
-    sess.push_index = boom
-    mem = MossMemory(_FakeClient(), "tropes", sess)
+async def test_push_is_noop():
+    mem = MossMemory(_FakeClient(), "tropes", "session")
     await mem.push()  # must not raise
 
 
