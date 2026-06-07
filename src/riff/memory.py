@@ -53,8 +53,20 @@ def deduplicate(docs: list[Hit], threshold: float = 0.90) -> list[Hit]:
     return kept
 
 
-def _qualifying_hits(hits: list[Hit], min_score: float) -> list[Hit]:
-    return [h for h in hits if h.score >= min_score]
+def _budget_trim_hits(docs: list[Hit], max_tokens: int, min_score: float = 0.4, chars_per_token: int = 4) -> list[Hit]:
+    result: list[Hit] = []
+    used = 0
+    for doc in docs:
+        if doc.score < min_score:
+            continue
+        cost = estimate_tokens(doc.text, chars_per_token)
+        if used + cost > max_tokens:
+            if not result:
+                result.append(doc)
+            break
+        result.append(doc)
+        used += cost
+    return result
 
 
 def format_memory_block(
@@ -71,25 +83,23 @@ def format_memory_block(
     semantic_budget = int(max_tokens * semantic_ratio)
     episodic_budget = int(max_tokens * episodic_ratio)
 
-    w_texts = budget_trim(working, working_budget, min_score)
-    e_texts = budget_trim(episodic, episodic_budget, min_score)
-    s_texts = budget_trim(semantic, semantic_budget, min_score)
+    w_hits = _budget_trim_hits(working, working_budget, min_score)
+    e_hits = _budget_trim_hits(episodic, episodic_budget, min_score)
+    s_hits = _budget_trim_hits(semantic, semantic_budget, min_score)
 
     sections: list[str] = []
 
-    def _tier(texts: list[str], hits: list[Hit], high_header: str):
-        qualified = _qualifying_hits(hits, min_score)
-        paired = list(zip(texts, qualified))
-        high = [t for t, h in paired if h.score >= 0.6]
-        low = [t for t, h in paired if h.score < 0.6]
+    def _tier(hits: list[Hit], high_header: str):
+        high = [h.text for h in hits if h.score >= 0.6]
+        low = [h.text for h in hits if h.score < 0.6]
         if high:
             sections.append(f"{high_header}\n" + "\n".join(f"- {t}" for t in high))
         if low:
             sections.append("VAGUE RECALL (may be imprecise):\n" + "\n".join(f"- {t}" for t in low))
 
-    _tier(w_texts, working, "CALLBACKS FROM THIS SHOW:")
-    _tier(e_texts, episodic, "CALLBACKS FROM THIS SHOW:")
-    _tier(s_texts, semantic, "COMEDY PATTERNS:")
+    _tier(w_hits, "CALLBACKS FROM THIS SHOW:")
+    _tier(e_hits, "CALLBACKS FROM THIS SHOW:")
+    _tier(s_hits, "COMEDY PATTERNS:")
 
     return "\n\n".join(sections) if sections else ""
 

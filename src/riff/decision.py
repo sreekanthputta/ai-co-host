@@ -104,18 +104,15 @@ class DecisionPipeline:
             await self._telemetry.emit("decision.skip", reason="gate", score=gate)
             return Decision(speak=False, reason="gate", gate_score=gate)
 
-        callbacks = await self._memory.callback(heard, k=2)
-        callback_block = "\n".join(f"- {h.text}" for h in callbacks) or "(none)"
-        local_context = (
-            f"Host/audience just said: {heard}\n"
-            f"Earlier in the show:\n{callback_block}"
-        )
-
-        # Prepend ambient memory context if provided
         if context:
-            full_context = f"{context}\n\n{local_context}"
+            full_context = f"{context}\n\nHost/audience just said: {heard}"
         else:
-            full_context = local_context
+            callbacks = await self._memory.callback(heard, k=2)
+            callback_block = "\n".join(f"- {h.text}" for h in callbacks) or "(none)"
+            full_context = (
+                f"Host/audience just said: {heard}\n"
+                f"Earlier in the show:\n{callback_block}"
+            )
 
         self._telemetry.start("llm")
         punch = await self._safe_punchline(self._persona.render_system_prompt(), full_context)

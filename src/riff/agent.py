@@ -130,7 +130,8 @@ class RiffAgent(Agent):
             req = await self._trigger.wait()
             heard = req.hint or self._last_heard or "(no recent input)"
             await self._telemetry.emit("trigger.fired", hint=req.hint)
-            decision = await self._decision.evaluate(heard, force=True)
+            memory_context = await self._ambient_context(heard)
+            decision = await self._decision.evaluate(heard, force=True, context=memory_context)
             if decision.line:
                 await self._speak(decision.line)
             else:
