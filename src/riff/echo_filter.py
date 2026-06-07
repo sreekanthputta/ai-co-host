@@ -25,8 +25,20 @@ class EchoFilter:
     def is_muted(self) -> bool:
         return time.time() < self._muted_until
 
-    def looks_like_echo(self, heard: str) -> bool:
-        if not self._last_spoken or not heard.strip():
+    def stop_speaking(self) -> None:
+        self._muted_until = time.time() + self._tail_ms / 1000.0
+
+    def should_process(self, text: str) -> bool:
+        if self.is_muted():
+            return False
+        if self.looks_like_echo(text):
+            return False
+        return True
+
+    def looks_like_echo(self, heard: str | None) -> bool:
+        if not self._last_spoken:
+            return False
+        if heard is None or len(heard.strip()) < 3:
             return False
         ratio = SequenceMatcher(None, heard.lower().strip(), self._last_spoken.lower().strip()).ratio()
         return ratio >= self._dedupe_threshold

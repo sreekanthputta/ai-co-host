@@ -2,13 +2,44 @@
 from __future__ import annotations
 import asyncio
 import json
-from typing import Any
+from typing import Any, Callable, Awaitable
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
 
 from .echo_filter import EchoFilter
 from .telemetry import Telemetry, Event
 from .trigger import ForceTrigger
+
+
+class MessageRequest(BaseModel):
+    text: str
+    sender: str = "user"
+    respond: bool = True
+    metadata: dict[str, Any] | None = None
+
+
+class MessageResponse(BaseModel):
+    reply: str | None
+    turn_id: str
+    decision: str
+    latency_ms: float
+
+
+class BatchMessageItem(BaseModel):
+    text: str
+    sender: str = "user"
+    timestamp: str | None = None
+
+
+class BatchRequest(BaseModel):
+    messages: list[BatchMessageItem]
+
+
+class BatchResponse(BaseModel):
+    indexed: int
+    turn_ids: list[str]
 
 
 def build_app(
@@ -17,6 +48,7 @@ def build_app(
     telemetry: Telemetry,
     echo: EchoFilter,
     state: dict[str, Any],
+    message_handler: Callable[..., Awaitable[dict]] | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Riff Trigger API")
     sockets: list[WebSocket] = []
@@ -76,5 +108,28 @@ def build_app(
         finally:
             if ws in sockets:
                 sockets.remove(ws)
+
+    @app.post("/message")
+    async def message(req: MessageRequest):
+        if message_handler is None:
+            return JSONResponse(status_code=501, content={"error": "message handler not configured"})
+        result = await message_handler(req.text, req.sender, req.respond, req.metadata)
+        return MessageResponse(**result)
+
+    @app.post("/message/batch")
+    async def message_batch(req: BatchRequest):
+        if message_handler is None:
+            return JSONResponse(status_code=501, content={"error": "message handler not configured"})
+        turn_ids = []
+        for msg in req.messages:
+            meta = {"timestamp": msg.timestamp} if msg.timestamp else None
+            result = await message_handler(msg.text, msg.sender, False, meta)
+            turn_ids.append(result["turn_id"])
+        return BatchResponse(indexed=len(req.messages), turn_ids=turn_ids)
+
+    @app.get("/transcript")
+    async def transcript(last: int = Query(default=20)):
+        turns = state.get("transcript", [])
+        return {"turns": turns[-last:]}
 
     return app

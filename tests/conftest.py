@@ -3,10 +3,26 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 from typing import Any
+from unittest.mock import MagicMock
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+# Mock livekit.agents before any riff imports that depend on it.
+class _FakeAgent:
+    def __init__(self, **kwargs):
+        pass
+
+class _FakeAgentsModule:
+    Agent = _FakeAgent
+    ChatContext = object
+    ChatMessage = object
+
+_livekit_mock = MagicMock()
+_livekit_mock.agents = _FakeAgentsModule
+sys.modules.setdefault("livekit", _livekit_mock)
+sys.modules.setdefault("livekit.agents", _FakeAgentsModule)
 
 from src.riff.echo_filter import EchoFilter
 from src.riff.memory import Hit, MemoryPort

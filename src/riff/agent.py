@@ -40,6 +40,7 @@ class RiffAgent(Agent):
         self._session_ref = None
         self._trigger_task: Optional[asyncio.Task] = None
         self._last_heard: str = ""
+        self._transcript_buffer: list[dict] = []
 
     def attach_session(self, agent_session) -> None:
         self._session_ref = agent_session
@@ -53,6 +54,37 @@ class RiffAgent(Agent):
                 await self._trigger_task
         await self._memory.push()
 
+    async def index_turn(self, text: str, speaker: str, source: str = "audio", metadata: dict | None = None) -> str:
+        """Index a turn into working memory. Returns turn_id."""
+        self._turn += 1
+        turn_id = f"turn-{self._turn}"
+        await self._memory.remember(turn_id, f"[{speaker}] {text}")
+        self._transcript_buffer.append({"id": turn_id, "speaker": speaker, "text": text, "source": source})
+        await self._telemetry.emit("turn.indexed", turn=self._turn, text=text, speaker=speaker, source=source)
+        return turn_id
+
+    async def process_chat_turn(self, text: str, sender: str) -> dict | None:
+        """Process a chat message. Returns reply dict or None if silent."""
+        turn_id = await self.index_turn(text, sender, source="chat")
+
+        decision = await self._decision.evaluate(text, force=False)
+        if not decision.speak:
+            return None
+
+        self._decision.mark_spoken()
+        await self._telemetry.emit("chime.emitted", line=decision.line, source="chat")
+        return {
+            "reply": decision.line,
+            "turn_id": turn_id,
+            "decision": "spoke",
+            "score": decision.llm_score,
+            "latency_ms": 0,
+        }
+
+    def get_transcript(self, last_n: int = 20) -> list[dict]:
+        """Return last N indexed turns."""
+        return list(self._transcript_buffer)[-last_n:]
+
     async def on_user_turn_completed(
         self, turn_ctx: ChatContext, new_message: ChatMessage
     ) -> None:
@@ -64,10 +96,8 @@ class RiffAgent(Agent):
             await self._telemetry.emit("turn.suppressed", reason="echo_or_muted", text=text)
             return
 
-        self._turn += 1
         self._last_heard = text
-        await self._memory.remember(f"turn-{self._turn}", text)
-        await self._telemetry.emit("turn.indexed", turn=self._turn, text=text)
+        await self.index_turn(text, speaker="audience", source="audio")
 
         decision = await self._decision.evaluate(text, force=False)
         if decision.speak:
