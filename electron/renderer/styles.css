@@ -1,0 +1,71 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 14px -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0e0f12;
+  color: #e6e6e6;
+}
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid #1f2127;
+}
+header h1 { margin: 0; font-size: 18px; letter-spacing: 0.5px; }
+.pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.pill.idle { background: #2c2f36; color: #aaa; }
+.pill.listening { background: #20364d; color: #6cb6ff; }
+.pill.thinking { background: #4a3b14; color: #f3c557; }
+.pill.speaking { background: #1f4a2c; color: #6cd97e; }
+.pill.muted { background: #4a1a1a; color: #ff7b7b; }
+.latency { margin-left: auto; color: #888; font-variant-numeric: tabular-nums; }
+
+main { padding: 14px 18px; display: grid; gap: 14px; }
+.controls { display: flex; gap: 8px; }
+button {
+  background: #1d2129;
+  color: #e6e6e6;
+  border: 1px solid #2a2f3a;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+button:hover { background: #262b35; }
+button.primary { background: #2c5cf6; border-color: #2c5cf6; }
+button.primary:hover { background: #3b6bff; }
+
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.pane {
+  background: #14161c;
+  border: 1px solid #1f2127;
+  border-radius: 10px;
+  padding: 12px;
+  height: 240px;
+  overflow: auto;
+}
+.pane h2 { margin: 0 0 8px; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.6px; }
+.pane ul { list-style: none; margin: 0; padding: 0; }
+.pane li { padding: 4px 0; border-bottom: 1px dashed #22252d; }
+.pane li:last-child { border-bottom: 0; }
+.pane li.skip { color: #777; }
+.pane li.chime { color: #6cd97e; }
+
+.logs h2 { font-size: 12px; color: #888; margin: 0 0 6px; }
+#log {
+  background: #0a0b0e;
+  border: 1px solid #1f2127;
+  border-radius: 10px;
+  padding: 10px;
+  height: 140px;
+  overflow: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+}

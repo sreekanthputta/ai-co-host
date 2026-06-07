@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Riff</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Riff</h1>
+      <span id="state-pill" class="pill idle">idle</span>
+      <span id="latency" class="latency">--ms</span>
+    </header>
+
+    <main>
+      <section class="controls">
+        <button id="start-btn">Start</button>
+        <button id="stop-btn">Stop</button>
+        <button id="trigger-btn" class="primary">Force chime</button>
+        <button id="mute-btn">Mute 30s</button>
+      </section>
+
+      <section class="panes">
+        <div class="pane">
+          <h2>Transcript</h2>
+          <ul id="transcript"></ul>
+        </div>
+        <div class="pane">
+          <h2>Decisions</h2>
+          <ul id="decisions"></ul>
+        </div>
+      </section>
+
+      <section class="logs">
+        <h2>Process log</h2>
+        <pre id="log"></pre>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

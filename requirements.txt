@@ -1,0 +1,12 @@
+moss
+python-dotenv
+pyyaml
+openai
+fastapi
+uvicorn[standard]
+livekit-agents
+livekit-plugins-openai
+livekit-plugins-deepgram
+livekit-plugins-silero
+pytest
+pytest-asyncio
