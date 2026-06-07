@@ -10,9 +10,10 @@ from typing import Optional
 
 from livekit.agents import Agent, ChatContext, ChatMessage
 
+from .config import MemoryConfig
 from .decision import DecisionPipeline
 from .echo_filter import EchoFilter
-from .memory import MemoryPort
+from .memory import Hit, MemoryPort, format_memory_block
 from .persona import PersonaPack
 from .telemetry import Telemetry
 from .trigger import ForceTrigger
@@ -28,6 +29,7 @@ class RiffAgent(Agent):
         echo: EchoFilter,
         telemetry: Telemetry,
         trigger: ForceTrigger,
+        config: MemoryConfig | None = None,
     ):
         super().__init__(instructions=persona.render_system_prompt())
         self._persona = persona
@@ -36,6 +38,7 @@ class RiffAgent(Agent):
         self._echo = echo
         self._telemetry = telemetry
         self._trigger = trigger
+        self._config = config or MemoryConfig()
         self._turn = 0
         self._session_ref = None
         self._trigger_task: Optional[asyncio.Task] = None
@@ -67,7 +70,8 @@ class RiffAgent(Agent):
         """Process a chat message. Returns reply dict or None if silent."""
         turn_id = await self.index_turn(text, sender, source="chat")
 
-        decision = await self._decision.evaluate(text, force=False)
+        memory_context = await self._ambient_context(text)
+        decision = await self._decision.evaluate(text, force=False, context=memory_context)
         if not decision.speak:
             return None
 
@@ -85,6 +89,22 @@ class RiffAgent(Agent):
         """Return last N indexed turns."""
         return list(self._transcript_buffer)[-last_n:]
 
+    async def _ambient_context(self, text: str) -> str:
+        """Parallel retrieval across memory layers, budget-trimmed."""
+        callbacks = await self._memory.callback(text, k=self._config.ambient_top_k)
+
+        # Future: query episodic + semantic indexes separately
+        return format_memory_block(
+            working=callbacks,
+            episodic=[],
+            semantic=[],
+            max_tokens=self._config.max_context_tokens,
+            working_ratio=self._config.working_ratio,
+            semantic_ratio=self._config.semantic_ratio,
+            episodic_ratio=self._config.episodic_ratio,
+            min_score=self._config.min_relevance_score,
+        )
+
     async def on_user_turn_completed(
         self, turn_ctx: ChatContext, new_message: ChatMessage
     ) -> None:
@@ -99,7 +119,8 @@ class RiffAgent(Agent):
         self._last_heard = text
         await self.index_turn(text, speaker="audience", source="audio")
 
-        decision = await self._decision.evaluate(text, force=False)
+        memory_context = await self._ambient_context(text)
+        decision = await self._decision.evaluate(text, force=False, context=memory_context)
         if decision.speak:
             await self._speak(decision.line)
         # The inversion: silence is the default outcome.

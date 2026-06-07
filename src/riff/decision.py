@@ -57,19 +57,23 @@ class DecisionPipeline:
         llm: MinimaxClient,
         echo: EchoFilter,
         telemetry: Telemetry,
+        gate: TriggerGate | None = None,
     ):
         self._persona = persona
         self._memory = memory
         self._llm = llm
         self._echo = echo
         self._telemetry = telemetry
-        self._last_spoke_at: float = 0.0
+        self._gate = gate or TriggerGate(
+            cooldown_seconds=persona.cooldown_seconds,
+            min_word_count=3,
+        )
 
     def mark_spoken(self) -> None:
-        self._last_spoke_at = time.time()
+        self._gate.record_speech()
 
     def in_cooldown(self) -> bool:
-        return (time.time() - self._last_spoke_at) < self._persona.cooldown_seconds
+        return self._gate.in_cooldown()
 
     @staticmethod
     def format_context(heard: str, callbacks: list, tropes: list = None) -> str:
@@ -80,20 +84,20 @@ class DecisionPipeline:
             parts.append("Comedy patterns:\n" + "\n".join(f"- {h.text}" for h in tropes))
         return "\n\n".join(parts)
 
-    async def evaluate(self, heard: str, *, force: bool = False) -> Decision:
+    async def evaluate(self, heard: str, *, force: bool = False, context: str = "") -> Decision:
         if not heard.strip() and not force:
             return Decision(speak=False, reason="empty")
 
-        if not force and len(heard.split()) < 3:
-            return Decision(speak=False, reason="too_short")
+        if not force and not self._gate.should_proceed(heard):
+            # Distinguish between too_short and cooldown for observability
+            if len(heard.split()) < self._gate._min_word_count:
+                return Decision(speak=False, reason="too_short")
+            await self._telemetry.emit("decision.skip", reason="cooldown")
+            return Decision(speak=False, reason="cooldown")
 
         if not force and self._echo.looks_like_echo(heard):
             await self._telemetry.emit("decision.skip", reason="echo", heard=heard)
             return Decision(speak=False, reason="echo")
-
-        if not force and self.in_cooldown():
-            await self._telemetry.emit("decision.skip", reason="cooldown")
-            return Decision(speak=False, reason="cooldown")
 
         gate = 1.0 if force else await self._memory.gate_score(heard)
         if not force and gate < self._persona.similarity_threshold:
@@ -102,13 +106,19 @@ class DecisionPipeline:
 
         callbacks = await self._memory.callback(heard, k=2)
         callback_block = "\n".join(f"- {h.text}" for h in callbacks) or "(none)"
-        context = (
+        local_context = (
             f"Host/audience just said: {heard}\n"
             f"Earlier in the show:\n{callback_block}"
         )
 
+        # Prepend ambient memory context if provided
+        if context:
+            full_context = f"{context}\n\n{local_context}"
+        else:
+            full_context = local_context
+
         self._telemetry.start("llm")
-        punch = await self._safe_punchline(self._persona.render_system_prompt(), context)
+        punch = await self._safe_punchline(self._persona.render_system_prompt(), full_context)
         latency_ms = self._telemetry.stop("llm")
         await self._telemetry.emit(
             "decision.llm", latency_ms=latency_ms, score=punch.score, line=punch.line

@@ -1,32 +1,247 @@
 [
-  {"id": "trope-job-1", "text": "Audience member's job title is unusual or specific - lawyer, accountant, dentist, engineer, nurse, teacher."},
-  {"id": "trope-job-2", "text": "Job is famously stressful, boring, or stereotyped - HR, IT support, finance, consulting."},
-  {"id": "trope-city-1", "text": "Audience member names a small or unexpected city - Tulsa, Cleveland, Boise, Bakersfield, Toledo."},
-  {"id": "trope-city-2", "text": "Audience member is from a place with a strong stereotype - Florida, Texas, Brooklyn, LA."},
-  {"id": "trope-couple-1", "text": "First date or new couple in the audience admits how long they've been together."},
-  {"id": "trope-couple-2", "text": "Long-term couple - married ten plus years, kids at home."},
-  {"id": "trope-anniversary-1", "text": "Audience member is celebrating birthday, anniversary, divorce, retirement, promotion, breakup."},
-  {"id": "trope-bachelor-1", "text": "Bachelor or bachelorette party in the audience."},
-  {"id": "trope-tourist-1", "text": "Visiting from out of town, here for a conference, wedding, or vacation."},
-  {"id": "trope-drinking-1", "text": "Audience member is drunk, ordering more drinks, or visibly tipsy."},
-  {"id": "trope-sober-1", "text": "Audience member is the only sober one in their group, designated driver."},
-  {"id": "trope-late-1", "text": "Audience member arrived late, walked in during the set, sitting up front."},
-  {"id": "trope-front-row-1", "text": "Front row, close to stage - eye contact, awkward proximity."},
-  {"id": "trope-phone-1", "text": "Audience member is on their phone, texting, or filming."},
-  {"id": "trope-heckler-1", "text": "Heckler interrupts, shouts back, makes unwelcome comments."},
-  {"id": "trope-quiet-1", "text": "Audience member is silent, stoic, doesn't laugh at anything."},
-  {"id": "trope-laugh-1", "text": "One person in audience has a loud distinctive laugh, snort, or cackle."},
-  {"id": "trope-kid-1", "text": "Someone brought their parents, kids, or grandparents to a comedy show."},
-  {"id": "trope-school-1", "text": "Audience member is a student, in college, in grad school, or just graduated."},
-  {"id": "trope-tech-1", "text": "Audience member works in tech, AI, startups, crypto, or VC."},
-  {"id": "trope-medical-1", "text": "Audience member is in medicine - doctor, nurse, vet, EMT, dentist, therapist."},
-  {"id": "trope-government-1", "text": "Audience member works for government, military, intelligence, or politics."},
-  {"id": "trope-creative-1", "text": "Audience member is in entertainment - actor, writer, musician, artist."},
-  {"id": "trope-callback-1", "text": "Earlier joke, person, or detail from the show that can be referenced again."},
-  {"id": "trope-name-funny-1", "text": "Audience member has a memorable, unusual, or punny name."},
-  {"id": "trope-outfit-1", "text": "Audience member is wearing something striking - costume, suit at a casual show, branded gear."},
-  {"id": "trope-relationship-status-1", "text": "Single, divorced, dating, recently dumped, on dating apps."},
-  {"id": "trope-pet-1", "text": "Audience member has unusual pet, lots of pets, or no pets when expected."},
-  {"id": "trope-fitness-1", "text": "Gym, running, yoga, crossfit, marathon training - exercise as identity."},
-  {"id": "trope-food-1", "text": "Diet identity - vegan, keto, gluten-free, carnivore, picky eater."}
+  {
+    "id": "trope-callback-1",
+    "text": "[Comedy Pattern: Basic Callback] Reference a specific detail from earlier in the show in a completely new context. The surprise of the connection IS the joke. Formula: [specific detail from 2+ min ago] + [current unrelated topic] = unexpected link. Example: If someone said they're a dentist and later the topic is dating: 'At least you're used to people lying about flossing — same energy as Tinder bios.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-2",
+    "text": "[Comedy Pattern: Time-Gap Callback] The longer you wait before calling back a detail, the bigger the payoff. Minimum 5 minutes gap; 10+ is gold. The audience feels smart for remembering. Formula: [plant detail early] + [wait 10+ min] + [reference in totally new context] = delayed surprise. Example: Open with someone named Greg who's an accountant. 20 min later during a bit about boring things: 'Sorry, I don't mean to sound like Greg's day job.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-3",
+    "text": "[Comedy Pattern: Cross-Person Callback] Connect two different audience members who have no relation to each other, creating an imaginary link between them. Formula: [detail from person A] + [detail from person B] + [invented connection] = surprise bond. Example: 'Wait — Mike's a divorce lawyer and Sarah just said she's newly single? Mike, is this a business development event for you?'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-4",
+    "text": "[Comedy Pattern: Callback Escalation] Return to the same detail multiple times, making it more absurd each time. Each reference adds a layer. By the third mention, the audience laughs just from recognition. Formula: [first mention = normal] + [second = exaggerated] + [third = completely absurd] = escalating returns. Example: First: 'Dave's in finance.' Later: 'Dave's judging all our spending right now.' Final: 'Dave just mentally foreclosed on my apartment.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "4"}
+  },
+  {
+    "id": "trope-callback-5",
+    "text": "[Comedy Pattern: Self-Callback] Reference your own earlier joke or something YOU said, not audience info. Shows self-awareness and ties your set together. Formula: [your earlier punchline or premise] + [new situation where it applies again] = self-referential humor. Example: After bombing a joke early: 'That's two jokes that haven't landed — I'm starting a collection, like stamps but sadder.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "4"}
+  },
+  {
+    "id": "trope-callback-6",
+    "text": "[Comedy Pattern: False Callback] Set up the audience to expect a callback, then deliver something completely different. Subverts their pattern recognition. Formula: [begin referencing earlier detail] + [audience anticipates the connection] + [go somewhere unexpected] = double surprise. Example: 'Remember Dave the finance guy? Well this next bit has absolutely nothing to do with him. Dave, you can relax. Unless...' (then move on).",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "3"}
+  },
+  {
+    "id": "trope-callback-7",
+    "text": "[Comedy Pattern: Triple Callback] The rule of threes applied to callbacks. First mention plants it, second reminds them, third pays off. The third should be the biggest twist or most absurd version. Formula: [plant] + [remind with twist] + [final absurd payoff] = satisfying completion. Example: 'Lisa's a yoga instructor.' Later: 'Lisa's so flexible she probably files taxes in lotus position.' Finally: 'Lisa, after tonight you'll need a full chakra reset.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-8",
+    "text": "[Comedy Pattern: Delayed Callback] Plant a small, forgettable detail early on and call it back at the very end of your set as a closer. The long delay makes the connection feel magical. Formula: [throwaway detail in first 2 min] + [entire set passes] + [final joke references it] = 'how did you remember that' reaction. Example: Open by noting someone's unusual drink order. Close with: 'Anyway, enjoy your oat milk margarita, Kevin. You absolute maniac.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-9",
+    "text": "[Comedy Pattern: Callback Chain] Connect three or more audience details into a single narrative thread, building a story that links unrelated people. Formula: [person A detail] reminds you of [person B detail] which connects to [person C detail] = invented conspiracy. Example: 'So Tom's a lawyer, Rachel's getting divorced, and Mike showed up alone tonight... I'm not saying this is a courtroom, but the evidence is mounting.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "4"}
+  },
+  {
+    "id": "trope-callback-10",
+    "text": "[Comedy Pattern: Meta-Callback] Openly acknowledge that you're doing a callback. Break the fourth wall of comedy structure itself. Formula: [set up callback obviously] + [acknowledge the technique] + [do it anyway or subvert] = comedy-nerd humor. Example: 'And yes, I'm bringing Dave back again — this is called a callback, for those keeping score. Dave's basically my co-host at this point. Dave, you want a percentage?'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "3"}
+  },
+  {
+    "id": "trope-structure-1",
+    "text": "[Comedy Pattern: Rule of Three] List two normal things to establish a pattern, then break it with an absurd third. The first two create expectation; the third destroys it. Formula: [normal example], [normal example], [absurd/specific/dark example]. Example: 'Things I'm good at: parallel parking, small talk, and crying in a Costco parking lot.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-2",
+    "text": "[Comedy Pattern: Heightening/Escalation] Start with a reasonable observation, then push it further and further until it's absurd. Each step should be bigger than the last. Formula: [reasonable take] → [slight exaggeration] → [totally absurd extreme]. Example: 'Dating apps are exhausting. First you swipe. Then you message. Then you plan. Then you show up and realize you'd rather be home watching a documentary about bridges.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-3",
+    "text": "[Comedy Pattern: Misdirection] Lead the audience to expect one conclusion with your setup, then deliver a punchline from a completely different direction. The gap between expectation and reality IS the joke. Formula: [setup implying direction A] + [punchline from direction B] = surprise laugh. Example: 'My doctor said I need to stop doing something that's slowly killing me. So I quit my job.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-4",
+    "text": "[Comedy Pattern: Understatement] Describe something dramatic or extreme in the most casual, minimized way possible. The contrast between the magnitude and your nonchalance is funny. Formula: [extreme situation] + [absurdly casual description] = comedic contrast. Example: 'So my apartment flooded, my cat ran away, and my ex got engaged — Tuesday was fine.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "4"}
+  },
+  {
+    "id": "trope-structure-5",
+    "text": "[Comedy Pattern: Specificity Over Generics] Replace vague words with hyper-specific details. 'A car' isn't funny. 'A 2003 Nissan Altima with a taped bumper' is. Specificity creates mental images and implies a story. Formula: [generic noun/verb] → [oddly specific version with detail] = instant character. Example: Not 'I ate fast food' but 'I ate a McChicken in a CVS parking lot at 11am on a Wednesday.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-6",
+    "text": "[Comedy Pattern: Status Reversal] Flip the power dynamic. The person who should be in control is helpless; the underdog has all the power. Works great in crowd work when you pretend the audience member has authority over you. Formula: [expected power dynamic] + [complete reversal] = satisfying subversion. Example: To a CEO in the audience: 'Sir, please don't fire me. I know this isn't your company but you have that energy.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "4"}
+  },
+  {
+    "id": "trope-structure-7",
+    "text": "[Comedy Pattern: Juxtaposition] Place two completely unlike things side by side and let the contrast do the work. The bigger the gap between the two things, the funnier. Formula: [serious/elevated thing] + [mundane/absurd thing] in same sentence = comedic collision. Example: 'He proposed at the top of the Eiffel Tower — she said yes, then immediately checked if the restaurant downstairs took reservations.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "4"}
+  },
+  {
+    "id": "trope-structure-8",
+    "text": "[Comedy Pattern: Tag Line] After your punchline gets a laugh, add a second shorter punchline (tag) that extends or reframes the joke. Ride the laugh wave. Formula: [setup] + [punchline/laugh] + [quick additional angle on same joke] = bonus laugh. Example: 'I told my therapist I feel like nobody listens to me. She said, what? ...Honestly, even making that joke up felt healing.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-1",
+    "text": "[Comedy Pattern: Job Roast] When someone shares their job, connect the job's stereotype to whatever topic you're currently on. Don't just roast the job — use it as a lens. Formula: [job stereotype/cliche] + [current topic] = job-filtered observation. Example: To a project manager: 'You're a PM? So you're professionally good at asking people if they've done the thing they said they'd do. That's basically my mom's job.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "5"}
+  },
+  {
+    "id": "trope-crowd-2",
+    "text": "[Comedy Pattern: Relationship Status Mining] Ask how long someone's been together, then use the number itself as material. Short = 'still performing for each other.' Long = 'comfortable silence experts.' Single = 'free agent energy.' Formula: [relationship length] + [what that implies about their behavior tonight] = relatable truth. Example: To a couple of 8 years: 'Eight years? So you're here because you ran out of things to talk about at dinner. This is basically couples therapy with a two-drink minimum.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "5"}
+  },
+  {
+    "id": "trope-crowd-3",
+    "text": "[Comedy Pattern: Hometown Roast] When someone names their city, use the city's reputation or lack thereof as the joke. Obscure cities = 'is that real?' Big cities = play on stereotypes. Formula: [city name] + [exaggerated reputation or deliberate ignorance] = geographic humor. Example: 'You're from Omaha? That's like the human equivalent of a loading screen. Nothing's happening but you're technically somewhere.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-4",
+    "text": "[Comedy Pattern: Age-Based Humor] Use someone's age or generation as a frame for observations. Don't mock them — mock the generational experience. Formula: [their age/generation] + [universal experience of that life stage] = shared recognition. Example: To someone who's 34: 'Thirty-four — the age where your back goes out more than you do. Your Friday plans are a heating pad and a documentary.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-5",
+    "text": "[Comedy Pattern: Couple Dynamics] Ask a couple WHO decided to come tonight, or who asked who out. The answer always reveals a power dynamic you can play with. Formula: [who made the decision] + [what that says about the relationship] = relatable couple humor. Example: 'She decided? Of course she did. Sir, when's the last time you made a decision? What restaurant, what movie — you just exist in her world. And honestly? You look at peace with it.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "5"}
+  },
+  {
+    "id": "trope-crowd-6",
+    "text": "[Comedy Pattern: The Quiet One] Address the person in a group who hasn't spoken. They become funny BECAUSE of their silence. Don't pressure them — make their silence the bit. Formula: [acknowledge silence] + [invent dramatic reason for it] = mystery humor. Example: 'Your friend hasn't said one word. Either they're plotting something or they're in witness protection. Either way, respect.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-7",
+    "text": "[Comedy Pattern: Heckler Redirect] When interrupted, don't fight the heckler. Redirect their energy into material. Acknowledge them, reframe what they said, and use it against them with wit not aggression. Formula: [heckler's comment] + [reframe as revealing something about THEM] = crowd sides with you. Example: If someone yells 'you suck': 'Thank you — honestly that's the most confident thing anyone's said tonight. You should do motivational speaking. Aggressively.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-8",
+    "text": "[Comedy Pattern: The Over-Sharer] When someone volunteers way too much info, act overwhelmed by the confession. You didn't ask for this much — and THAT's the joke. Formula: [excessive personal detail] + [your exaggerated reaction to receiving it] = boundary humor. Example: 'I asked what you do for work and you told me about your custody arrangement. Sir, this is a comedy show, not a deposition. But I hope you get the kids.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-9",
+    "text": "[Comedy Pattern: Front Row Proximity] The front row is inherently funny because of the physical closeness. They can't hide. Use the spatial relationship itself as material. Formula: [their proximity to you] + [what that implies about their personality] = seating-as-character. Example: 'Front row — you came here to be SEEN. You didn't want comedy, you wanted an experience. You're the people who also sit in exit rows. Main characters.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-10",
+    "text": "[Comedy Pattern: Group Dynamics] When a whole group is together (work team, birthday party, bachelor crew), roast the GROUP dynamic, not individuals. Ask who's the responsible one vs. the wild one. Formula: [group occasion] + [identify the outlier/leader] + [exaggerate their role] = group humor. Example: 'Work outing? OK who's the boss here? ...You? And they still came? That's either great leadership or hostage syndrome.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "5"}
+  },
+  {
+    "id": "trope-crowd-11",
+    "text": "[Comedy Pattern: Name-Based Humor] Use someone's name as a springboard — rhymes, associations, famous people with that name, or the vibe the name carries. Keep it playful, not mean. Formula: [their name] + [association/vibe/famous namesake] + [invented personality based on it] = name humor. Example: 'Your name's Brad? Every Brad I've ever met peaked in high school. You look like you still talk about a lacrosse goal from 2009.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "3"}
+  },
+  {
+    "id": "trope-crowd-12",
+    "text": "[Comedy Pattern: Outfit Observation] Notice something specific about what someone is wearing and build a character around it. Keep it complimentary or absurd, never cruel. Formula: [specific clothing item] + [invented backstory it implies] = fashion-as-character. Example: 'You're wearing a blazer to a comedy show — respect. You either came from work or you dress like this for everything. Grocery store blazer. Gym blazer. That's commitment.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "3"}
+  },
+  {
+    "id": "trope-timing-1",
+    "text": "[Comedy Pattern: The Pause] Silence before a punchline builds anticipation. The audience knows something is coming and the tension itself becomes funny. Hold longer than comfortable. Formula: [setup that implies something is coming] + [2-4 seconds of silence] + [punchline delivered simply] = tension release. Example: 'She looked at me and said... (pause, eye contact with audience) ...we need to talk about your browser history.'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "5"}
+  },
+  {
+    "id": "trope-timing-2",
+    "text": "[Comedy Pattern: Throwaway Delivery] Say something hilarious as if it's an unimportant aside — mumble it, say it while moving on, or bury it in a transition. The casualness amplifies the joke. Formula: [funny observation] + [delivered as if you barely care about it] = 'wait what did they just say' laugh. Example: While transitioning topics: '...anyway, that's why I'm not allowed back at that particular IKEA — so who here is in a relationship?'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "4"}
+  },
+  {
+    "id": "trope-timing-3",
+    "text": "[Comedy Pattern: Act-Out] Briefly become another character — shift your voice, posture, or energy to physicalize someone you're describing. Even a half-second character break gets laughs. Formula: [describe person/scenario] + [briefly become that person with voice/posture shift] + [snap back to normal] = physical comedy. Example: Describing a passive-aggressive text: (switches to overly sweet voice) 'No worries at all!! Totally fine!! :)' (back to normal) 'Three exclamation points. She's going to end me.'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "4"}
+  },
+  {
+    "id": "trope-timing-4",
+    "text": "[Comedy Pattern: Crowd Reaction Callback] When part of the audience reacts strongly (groans, one person laughs loud, silence), acknowledge it immediately. The shared awareness of what just happened in the room is instant material. Formula: [audience reaction happens] + [you name it or respond to it] = meta-moment. Example: After a groan: 'Oh, you all hated that. I could feel the energy leave the room. That joke has a one-star Yelp review now.'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "5"}
+  },
+  {
+    "id": "trope-timing-5",
+    "text": "[Comedy Pattern: The Save] When a joke doesn't land, acknowledge the silence instead of pretending it didn't happen. The honesty about bombing can get a bigger laugh than the original joke would have. Formula: [joke bombs] + [acknowledge the silence with confidence] + [self-deprecating observation] = recovery laugh. Example: After silence: 'And THAT's why I don't do that joke in front of humans. That one tested great with my shower wall.'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "4"}
+  },
+  {
+    "id": "trope-culture-1",
+    "text": "[Comedy Pattern: Era References] Anchor jokes in a specific time period everyone remembers. The shared memory creates instant connection. Pick moments with strong emotional residue. Formula: [specific era/event everyone experienced] + [observation about behavior during it] = nostalgic humor. Example: 'Remember early COVID when everyone became a bread baker? We were two weeks from societal collapse and people were like: sourdough.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "4"}
+  },
+  {
+    "id": "trope-culture-2",
+    "text": "[Comedy Pattern: Generational References] Play on the stereotypes between boomers, millennials, and gen-z. Works best when you mock YOUR OWN generation. Formula: [generational stereotype] + [specific behavior that proves it] = self-aware generational humor. Example: 'I'm a millennial — I'll spend $7 on oat milk but I'll have a panic attack over a $3 ATM fee. Our priorities are an art form.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "4"}
+  },
+  {
+    "id": "trope-culture-3",
+    "text": "[Comedy Pattern: Universal Modern Experiences] Reference shared experiences everyone has but nobody talks about on stage — dating apps, wifi passwords, phone battery anxiety, email sign-offs. Formula: [universal micro-experience] + [observation that names the hidden absurdity] = 'so true' laugh. Example: 'Why do I agonize over email sign-offs? Best regards? Warm regards? Just regards? What temperature are my regards? I've spent more time on sign-offs than on the actual email.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "5"}
+  },
+  {
+    "id": "trope-culture-4",
+    "text": "[Comedy Pattern: Tech/AI References] For tech-savvy audiences, reference the absurdity of living alongside AI, algorithms, and tech culture. The audience builds AI — they'll love jokes about its quirks. Formula: [AI/tech behavior] + [human parallel or consequence] = tech-audience humor. Example: 'ChatGPT writes my emails now. My coworkers think I've become more professional. No — I've become less human. My emails have headers and bullet points. I sound like a LinkedIn post.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "5"}
+  },
+  {
+    "id": "trope-culture-5",
+    "text": "[Comedy Pattern: Movie/TV Tropes Everyone Knows] Reference widely-known fictional scenarios or character archetypes that map to real life. Don't pick niche references — pick ones 90% of the room knows. Formula: [real situation] + [famous movie/TV parallel] = pop culture lens. Example: 'Every group project has the one person who does nothing — that's the friend in a heist movie whose only job is driving. And they STILL almost mess it up.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "3"}
+  },
+  {
+    "id": "trope-crowd-13",
+    "text": "[Comedy Pattern: Tech Job Specifics] For developer/startup audiences, go deeper than 'you work in tech.' Reference standups, Jira tickets, Slack messages, deploy anxiety, imposter syndrome. They live this. Formula: [specific tech work ritual] + [absurd but true observation about it] = insider humor. Example: 'You're a software engineer? So you write code, then spend three hours explaining to another engineer why your code is correct in a pull request. That's just arguing with citations.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-9",
+    "text": "[Comedy Pattern: The Assumption Reveal] State something as if it's an obvious shared assumption, then reveal that assumption is absurd. The audience agrees before they realize what they agreed to. Formula: [casual 'we all know' framing] + [absurd premise treated as normal] = sneaky absurdism. Example: 'We've all stress-eaten an entire sleeve of Oreos and then hidden the package at the bottom of the trash like a crime scene. ...No? Just me? You're all liars.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "4"}
+  },
+  {
+    "id": "trope-crowd-14",
+    "text": "[Comedy Pattern: The Volunteer vs. The Voluntold] When doing crowd work, identify whether someone WANTED to be talked to or if their friend pointed them out. Play the dynamic between them. Formula: [person got volunteered by friend] + [mock the betrayal] + [briefly side with victim] = group dynamics. Example: 'Your friend pointed at you SO fast. That's not friendship, that's a sacrifice. She threw you to the wolves. You came here for fun and she made you the entertainment.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  },
+  {
+    "id": "trope-timing-6",
+    "text": "[Comedy Pattern: Riding the Laugh] When a joke lands big, don't rush to the next one. Stay in the moment — add a quick tag, react to the audience's reaction, or repeat the punchline slightly differently. Let the good energy peak. Formula: [joke lands] + [pause to let laugh build] + [small addition that extends it] = maximized moment. Example: After big laugh: (wait) '...yeah. That one was for me. I needed that. We're all healing together up here.'",
+    "metadata": {"type": "pattern", "category": "timing", "strength": "4"}
+  },
+  {
+    "id": "trope-structure-10",
+    "text": "[Comedy Pattern: The Pivot] When crowd work gives you unexpected info, don't force your planned bit — pivot to what's actually interesting. The audience respects improvisational agility. Formula: [planned direction] + [audience gives better detail] + [abandon plan, follow the interesting thread] = authentic moment. Example: You ask about jobs expecting normal answer. They say 'I'm a professional cuddler.' Drop everything: 'I'm sorry, we're not moving past this. Everyone else's jobs are canceled. Tell me everything.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-callback-11",
+    "text": "[Comedy Pattern: Running Gag] Unlike a callback (one reference), a running gag is a recurring bit throughout the entire set that evolves each time. Create a catchphrase or concept that gets more absurd with each appearance. Formula: [establish concept] + [return to it 3-5 times] + [each time it's more exaggerated] = cumulative humor. Example: Start with 'Dave from finance is judging us.' Every 5 min: 'Dave's doing the math on that one.' By end: 'Dave, submit your full audit of tonight by Monday.'",
+    "metadata": {"type": "pattern", "category": "callback", "strength": "5"}
+  },
+  {
+    "id": "trope-culture-6",
+    "text": "[Comedy Pattern: Startup Culture Roast] For YC/startup audiences, reference pitch decks, runway, pivoting, 'disruption,' and founder energy. They laugh because they live in this absurd world daily. Formula: [startup buzzword/ritual] + [translate to normal-person language] = deflation humor. Example: 'He said his app is disrupting the laundry space. Brother, it's a laundromat with an iPad. You put a screen on a washing machine and called it innovation.'",
+    "metadata": {"type": "pattern", "category": "culture", "strength": "5"}
+  },
+  {
+    "id": "trope-structure-11",
+    "text": "[Comedy Pattern: The Contrast Character] Create two versions of a person or yourself — the public version vs. private version, or the expectation vs. reality. Toggle between them rapidly. Formula: [idealized/public version] vs [actual/private version] = relatable contrast. Example: 'LinkedIn me: Strategic thought leader driving cross-functional synergy. Real me: I unmuted on a Zoom call to say something and everyone had already moved on.'",
+    "metadata": {"type": "pattern", "category": "structure", "strength": "5"}
+  },
+  {
+    "id": "trope-crowd-15",
+    "text": "[Comedy Pattern: The Wingman/Hype Person] Pick someone in the audience and repeatedly come back to them as your ally or co-host for the night. They become your 'guy' — the audience adopts them too. Formula: [designate one person as your ally early] + [check in with them throughout] + [give them a role] = recurring character. Example: 'Sarah, you're my assistant tonight. Every time a joke works, you nod. Every time it bombs, you... also nod, because I'm fragile. Deal? Deal.'",
+    "metadata": {"type": "pattern", "category": "crowd", "strength": "4"}
+  }
 ]

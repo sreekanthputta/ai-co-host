@@ -42,10 +42,7 @@ async def test_force_bypasses_gate(pipeline, memory):
 
 
 async def test_cooldown_blocks_natural_speech(pipeline):
-    pipeline._persona = pipeline._persona.__class__(
-        name="t", voice_id="v", system_prompt="p", cooldown_seconds=10.0,
-        similarity_threshold=0.5,
-    )
+    pipeline._gate._cooldown_seconds = 10.0
     pipeline.mark_spoken()
     d = await pipeline.evaluate("input that would otherwise pass")
     assert d.speak is False and d.reason == "cooldown"
@@ -146,3 +143,38 @@ async def test_format_context_with_tropes():
 async def test_format_context_empty_lists():
     ctx = DecisionPipeline.format_context("just this", [])
     assert ctx == "Host/audience just said: just this"
+
+
+# --- TriggerGate integration tests ---
+
+async def test_pipeline_uses_injected_gate(persona, memory, llm, echo, telemetry):
+    gate = TriggerGate(cooldown_seconds=99.0, min_word_count=3)
+    pipe = DecisionPipeline(persona, memory, llm, echo, telemetry, gate=gate)
+    gate.record_speech()
+    d = await pipe.evaluate("this should be blocked by cooldown")
+    assert d.speak is False and d.reason == "cooldown"
+
+
+async def test_pipeline_mark_spoken_uses_gate(persona, memory, llm, echo, telemetry):
+    gate = TriggerGate(cooldown_seconds=99.0, min_word_count=3)
+    pipe = DecisionPipeline(persona, memory, llm, echo, telemetry, gate=gate)
+    assert pipe.in_cooldown() is False
+    pipe.mark_spoken()
+    assert pipe.in_cooldown() is True
+
+
+async def test_context_parameter_prepended_to_llm_call(pipeline, llm):
+    d = await pipeline.evaluate("audience says something here", context="AMBIENT: joke about dogs")
+    assert d.speak is True
+    # Verify the context was included in the LLM call
+    assert len(llm.calls) == 1
+    assert "AMBIENT: joke about dogs" in llm.calls[0]["context"]
+    assert "audience says something here" in llm.calls[0]["context"]
+
+
+async def test_empty_context_not_prepended(pipeline, llm):
+    d = await pipeline.evaluate("audience says something here", context="")
+    assert d.speak is True
+    assert len(llm.calls) == 1
+    # Should not start with double newline from empty context join
+    assert not llm.calls[0]["context"].startswith("\n")

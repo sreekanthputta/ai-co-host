@@ -13,9 +13,11 @@ class FakeDecision:
     def __init__(self, speak=True, line="funny line", score=0.9):
         self._decision = Decision(speak=speak, line=line, llm_score=score)
         self.evaluated: list[str] = []
+        self.contexts: list[str] = []
 
-    async def evaluate(self, text, *, force=False):
+    async def evaluate(self, text, *, force=False, context=""):
         self.evaluated.append(text)
+        self.contexts.append(context)
         return self._decision
 
     def mark_spoken(self):
@@ -170,3 +172,119 @@ async def test_get_transcript_has_all_fields(agent):
     assert "speaker" in entry
     assert "text" in entry
     assert "source" in entry
+
+
+# --- ambient context tests ---
+
+
+async def test_ambient_context_returns_empty_when_no_hits(agent):
+    ctx = await agent._ambient_context("anything")
+    assert ctx == ""
+
+
+async def test_ambient_context_formats_hits(persona, echo, telemetry, trigger):
+    from src.riff.memory import Hit
+
+    class MemoryWithHits:
+        def __init__(self):
+            self.remembered = []
+            self.pushes = 0
+
+        async def gate_score(self, text):
+            return 0.9
+
+        async def callback(self, text, k=2):
+            return [Hit(text="earlier joke about cats", score=0.8, id="h1")]
+
+        async def remember(self, doc_id, text):
+            self.remembered.append((doc_id, text))
+
+        async def push(self):
+            self.pushes += 1
+
+    mem = MemoryWithHits()
+    fd = FakeDecision()
+    ag = RiffAgent(
+        persona=persona,
+        memory=mem,
+        decision=fd,
+        echo=echo,
+        telemetry=telemetry,
+        trigger=trigger,
+    )
+    ctx = await ag._ambient_context("tell me about cats")
+    assert "earlier joke about cats" in ctx
+    assert "CALLBACKS FROM THIS SHOW" in ctx
+
+
+async def test_ambient_context_passed_to_decision(persona, echo, telemetry, trigger):
+    from src.riff.memory import Hit
+
+    class MemoryWithHits:
+        def __init__(self):
+            self.remembered = []
+            self.pushes = 0
+
+        async def gate_score(self, text):
+            return 0.9
+
+        async def callback(self, text, k=2):
+            return [Hit(text="a memorable moment", score=0.85, id="h2")]
+
+        async def remember(self, doc_id, text):
+            self.remembered.append((doc_id, text))
+
+        async def push(self):
+            self.pushes += 1
+
+    mem = MemoryWithHits()
+    fd = FakeDecision()
+    ag = RiffAgent(
+        persona=persona,
+        memory=mem,
+        decision=fd,
+        echo=echo,
+        telemetry=telemetry,
+        trigger=trigger,
+    )
+    await ag.process_chat_turn("test input text", "user1")
+    assert len(fd.contexts) == 1
+    assert "a memorable moment" in fd.contexts[0]
+
+
+async def test_on_user_turn_completed_passes_context(persona, echo, telemetry, trigger):
+    from src.riff.memory import Hit
+    from unittest.mock import MagicMock
+
+    class MemoryWithHits:
+        def __init__(self):
+            self.remembered = []
+            self.pushes = 0
+
+        async def gate_score(self, text):
+            return 0.9
+
+        async def callback(self, text, k=2):
+            return [Hit(text="crowd callback", score=0.7, id="h3")]
+
+        async def remember(self, doc_id, text):
+            self.remembered.append((doc_id, text))
+
+        async def push(self):
+            self.pushes += 1
+
+    mem = MemoryWithHits()
+    fd = FakeDecision(speak=False)
+    ag = RiffAgent(
+        persona=persona,
+        memory=mem,
+        decision=fd,
+        echo=echo,
+        telemetry=telemetry,
+        trigger=trigger,
+    )
+    ctx = MagicMock()
+    msg = FakeMessage(text_content="audience input here")
+    await ag.on_user_turn_completed(ctx, msg)
+    assert len(fd.contexts) == 1
+    assert "crowd callback" in fd.contexts[0]
